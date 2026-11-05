@@ -130,6 +130,8 @@ if(state.reviews>=1) {
  }
 
 }
+if(state.submitted_receipts!==1)throw Error('Review #1 duplicate-denial acceptance: exactly one receipt required');
+console.log('NO_DUPLICATE_RECEIPT_COUNT_PASS:',state.submitted_receipts);
 if(state.submitted_receipts>=1) {
  const reviewerB='0xD6b8A3A5eB329410D9504784812b8569afA8C2aF';
  const raw=await client.readContract({address,functionName:'receipt_for',args:[1,reviewerB],

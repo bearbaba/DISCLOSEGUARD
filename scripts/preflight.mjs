@@ -95,11 +95,24 @@ if(state.reviews>=1) {
  const disclosureRaw=await client.readContract({address,functionName:'get_disclosure',
   args:[1,reviewerB],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
  const disclosure=typeof disclosureRaw==='string'?JSON.parse(disclosureRaw):disclosureRaw;
- if(disclosure.review_id!==1||disclosure.version!==1||disclosure.assignment_version!==1||
+ if(disclosure.review_id!==1||disclosure.version<1||disclosure.assignment_version!==1||
     disclosure.reviewer?.toLowerCase()!==reviewerB.toLowerCase()||
-    !disclosure.relationship?.includes('I have never been employed, paid, contracted, or given equity by Project Cedar'))
+    !disclosure.relationship?.includes('Project Cedar'))
   throw Error('Reviewer B disclosure mismatch');
  console.log('LATEST_FINAL_DISCLOSURE_B:',JSON.stringify({review_id:disclosure.review_id,reviewer:disclosure.reviewer,version:disclosure.version,assignment_version:disclosure.assignment_version,sha256:disclosure.sha256}));
+ const assessmentRaw=await client.readContract({address,functionName:'get_assessment',
+  args:[1,reviewerB],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const assessment=typeof assessmentRaw==='string'?JSON.parse(assessmentRaw):assessmentRaw;
+ if(!assessment || !['REVIEW_REQUIRED','ELIGIBLE','RECUSE'].includes(assessment.verdict)||
+    assessment.review_id!==1||assessment.reviewer?.toLowerCase()!==reviewerB.toLowerCase())
+  throw Error('Reviewer B assessment missing or invalid');
+ if(assessment.verdict==='REVIEW_REQUIRED'&&auth.allowed!==false)
+  throw Error('REVIEW_REQUIRED cannot authorize reviewer');
+ if(assessment.disclosure_version!==disclosure.version&&auth.allowed!==false)
+  throw Error('Stale disclosure assessment cannot authorize reviewer');
+ console.log('LATEST_FINAL_ASSESSMENT_B:',JSON.stringify({review_id:assessment.review_id,
+   verdict:assessment.verdict,disclosure_version:assessment.disclosure_version,
+   rules_version:assessment.rules_version,assignment_version:assessment.assignment_version}));
  console.log('LATEST_FINAL_AUTHORIZATION_B:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,assignment_version:auth.assignment_version,disclosure_version:auth.disclosure_version}));
  if(auth.verdict==='PENDING'&&auth.allowed!==false)
   throw Error('Pending Reviewer B must not be authorized');

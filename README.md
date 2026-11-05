@@ -42,6 +42,12 @@ These are **sample expectations** for a Studio test. Only signed executions and 
 
 Additional views: `get_review`, `get_assignment`, `get_disclosure`, `get_assessment`, `receipt_for`, `get_receipt`, `stats`. The product keeps a completed review receipt accessible after later changes in rules or assignment status.
 
+## Deployed GenLayer contract
+
+DISCLOSEGUARD is deployed on **GenLayer Studionet 61999** at [`0x3cd3F9f47F0a8bF9BF9EFeC79613Fb9d20BD7981`](https://explorer-studio.genlayer.com/address/0x3cd3F9f47F0a8bF9BF9EFeC79613Fb9d20BD7981). The [read-only deployment preflight](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42039328637) verified the deployed source matches this repository, all 16 contract methods are present and `stats()` is readable at `LATEST_FINAL`. Initial state: `0 reviews / 0 receipts`.
+
+[Import in GenLayer Studio](https://studio.genlayer.com/?import-contract=0x3cd3F9f47F0a8bF9BF9EFeC79613Fb9d20BD7981) · [Deployment reference](docs/DEPLOYMENT.md).
+
 ## Run and verify
 
 Source: [`contracts/discloseguard.py`](contracts/discloseguard.py). Follow the reproducible [Studio acceptance guide](docs/STUDIO_ACCEPTANCE.md), including a positive reviewer submission and actual denial cases.

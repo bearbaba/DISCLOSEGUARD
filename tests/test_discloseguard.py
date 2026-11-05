@@ -30,12 +30,21 @@ class MockContract:
 class Runtime:
     def __init__(self):
         self.answer = "ELIGIBLE"
+        self.sequence = None
+        self.calls = 0
         self.message = types.SimpleNamespace(sender_address=types.SimpleNamespace(as_hex=CHAIR))
         self.vm = types.SimpleNamespace(UserError=ValueError, Return=Return,
                                         run_nondet_unsafe=self.agree)
-        self.nondet = types.SimpleNamespace(exec_prompt=lambda prompt: self.answer)
+        self.nondet = types.SimpleNamespace(exec_prompt=self.exec_prompt)
         self.public = types.SimpleNamespace(write=lambda f: f, view=lambda f: f)
         self.Contract = MockContract
+
+    def exec_prompt(self, prompt):
+        if self.sequence:
+            result = self.sequence[self.calls % len(self.sequence)]
+            self.calls += 1
+            return result
+        return self.answer
 
     def agree(self, leader, validator):
         verdict = leader()
@@ -72,6 +81,8 @@ class DiscloseGuardTests(unittest.TestCase):
     def setUp(self):
         runtime.message.sender_address.as_hex = CHAIR
         runtime.answer = "ELIGIBLE"
+        runtime.sequence = None
+        runtime.calls = 0
         self.c = module.DiscloseGuard()
         self.rid = self.c.create_review("Project Cedar review", SUBJECT, RULES)
         self.c.assign_reviewer(self.rid, A)
@@ -153,6 +164,30 @@ class DiscloseGuardTests(unittest.TestCase):
         self.actor(B)
         with self.assertRaisesRegex(ValueError, "hash mismatch"):
             self.c.submit_review(self.rid, REVIEW, "0" * 64)
+
+    def test_validator_disagreement_never_authorizes(self):
+        self.disclose(B)
+        self.actor(CHAIR)
+        runtime.sequence = ["ELIGIBLE", "RECUSE"]
+        runtime.calls = 0
+        with self.assertRaisesRegex(ValueError, "consensus disagreement"):
+            self.c.assess_conflict(self.rid, B)
+        self.assertEqual(self.c.get_assessment(self.rid, B), "")
+        self.assertFalse(self.allowed(B))
+
+    def test_reassignment_requires_fresh_disclosure(self):
+        self.disclose(B)
+        self.assess(B)
+        self.assertTrue(self.allowed(B))
+        self.actor(CHAIR)
+        self.c.revoke_reviewer(self.rid, B)
+        self.c.assign_reviewer(self.rid, B)
+        self.assertFalse(self.allowed(B))
+        with self.assertRaisesRegex(ValueError, "outdated"):
+            self.c.assess_conflict(self.rid, B)
+        self.disclose(B, CLEAR + " This disclosure supersedes my prior signed statement.")
+        self.assess(B)
+        self.assertTrue(self.allowed(B))
 
     def test_closed_case_and_historical_receipt(self):
         self.disclose(B)

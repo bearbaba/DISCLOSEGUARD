@@ -119,6 +119,20 @@ After the second signed disclosure (v2), the Chair re-ran `assess_conflict(1, Re
 | --- | --- | --- | --- | --- | --- | --- |
 | `assess_conflict(1, 0xD6b8…C2aF)` | Chair `0x4C7c…8Dcb` | FINALIZED | SUCCESS | Accepted | **`ELIGIBLE`** | [0x27118640…213b12](https://explorer-studio.genlayer.com/tx/0x271186407e4bf6d5ac29fda0762aadacd6435964fb398a03352c1d8324213b12) |
 
-This is a verdict on a synthetic **self-declaration**, not independent validation of real-world affiliations. It supersedes the v1 `REVIEW_REQUIRED` assessment for authorization under the same rules version. The [read-only `LATEST_FINAL` verification](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42047636762) confirmed that the assessment recorded `ELIGIBLE` for **Disclosure v2 / Rules v1 / Assignment v1**, `authorization.allowed=true`, and `submitted_receipts=0`. The next step is a separate Reviewer B signed `submit_review` transaction and confirmed receipt.
+This is a verdict on a synthetic **self-declaration**, not independent validation of real-world affiliations. It supersedes the v1 `REVIEW_REQUIRED` assessment for authorization under the same rules version. The [read-only `LATEST_FINAL` verification](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42047636762) confirmed that the assessment recorded `ELIGIBLE` for **Disclosure v2 / Rules v1 / Assignment v1**, `authorization.allowed=true`, and `submitted_receipts=0`. The Reviewer B signed `submit_review` transaction is recorded below.
+
+## Reviewer B — authorized signed review and on-chain receipt #1
+
+After the Chair's `ELIGIBLE` consensus assessment, Reviewer B called `submit_review` from the previously assigned wallet using a 60+ character synthetic Project Cedar grant assessment and its matching SHA-256.
+
+| Method | Signer | Final status | GenVM | Consensus | Return value | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `submit_review(1, review_text, review_sha256)` | Reviewer B `0xD6b8…C2aF` | FINALIZED | **SUCCESS** | Accepted | **Receipt ID `1`** | [0x2f61f3fe…608f0c](https://explorer-studio.genlayer.com/tx/0x2f61f3feef095a85c18e02007913613e58056d5789cadba5dc148fa3cc608f0c) |
+
+**Review content:** "I independently reviewed the synthetic Project Cedar grant proposal, including the technical design, feasibility, stated milestones, and expected public benefit. The proposal presents a plausible approach to open-source data indexing, but it should provide measurable performance benchmarks and a clearer maintenance plan before funding is finalized."
+
+**Submitted review SHA-256:** `9f3ea69857f2e5ff38644486092de964a96e7678ac127bf4a6537f9e873e545a`.
+
+At transaction time the assessment concerned **Rules v1, Assignment v1, Disclosure v2**. This successful transaction demonstrates authorized execution. A separate read-only `LATEST_FINAL` check is used to verify `receipt_for`, `get_receipt`, and post-submission replay authorization, without claiming the second signed rejection test has happened.
 
 Each next signed operation must have its own receipt and final-state readback.

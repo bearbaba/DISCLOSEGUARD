@@ -41,6 +41,7 @@ if(state.reviews>=1) {
  const raw=await client.readContract({address,functionName:'get_review',args:[1],
   transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
  const review=typeof raw==='string'?JSON.parse(raw):raw;
+ if(review.id!==1||review.chair?.toLowerCase()!=='0x4c7cb73ac8f8999af21cfc9ff4cf2333a9508dcb'||review.title!=='Grant Round Alpha reviewer eligibility') throw Error('Review #1 readback mismatch');
  console.log('LATEST_FINAL_REVIEW_1:',JSON.stringify({id:review.id,chair:review.chair,
   rules_version:review.rules_version,active:review.active,title:review.title}));
 }

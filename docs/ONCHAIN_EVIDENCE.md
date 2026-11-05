@@ -39,6 +39,18 @@ Reviewer A wallet `0x60Bfdf6315294c7856Acdc0B80D7Bd40217DEBff` declared that it 
 
 **Supporting reference:** `Self-declared advisory engagement / test record A`.
 
-The disclosure is a signed input for a subsequent `assess_conflict(1, ReviewerA)` GenLayer AI Consensus call. Its successful submission alone does **not** authorize a review submission or establish a `RECUSE` verdict.
+## Consensus classification — RECUSE
+
+The Chair evaluated Reviewer A against the frozen Project Cedar conflict-of-interest rules. The disclosure explicitly stated a paid advisory relationship during the grant round, which meets the policy's recusal condition.
+
+| Method | Signed by | Final status | GenVM | Consensus | AI verdict | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `assess_conflict(1, 0x60Bf…eBff)` | Chair `0x4C7c…8Dcb` | FINALIZED | SUCCESS | Accepted | **`RECUSE`** | [0xc4125732…5a21e9](https://explorer-studio.genlayer.com/tx/0xc4125732c40745be8aac6397e963e44335e7351153f7b3d7c25539d65c5a21e9) |
+
+The transaction's equivalence principle output also returned `RECUSE`. This consensus assessment concerns the submitted self-declaration and frozen rules; it does not independently prove the real-world relationship.
+
+A correctly implemented reviewer gate must keep `authorization(1, ReviewerA).allowed=false`. The on-chain `submit_review` denial test is a separate transaction from the AI assessment.
+
+
 
 Each next signed operation must have its own receipt and final-state readback.

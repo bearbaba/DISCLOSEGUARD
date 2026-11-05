@@ -92,7 +92,18 @@ if(state.reviews>=1) {
  const authRaw=await client.readContract({address,functionName:'authorization',
   args:[1,reviewerB],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
  const auth=typeof authRaw==='string'?JSON.parse(authRaw):authRaw;
+ const disclosureRaw=await client.readContract({address,functionName:'get_disclosure',
+  args:[1,reviewerB],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const disclosure=typeof disclosureRaw==='string'?JSON.parse(disclosureRaw):disclosureRaw;
+ if(disclosure.review_id!==1||disclosure.version!==1||disclosure.assignment_version!==1||
+    disclosure.reviewer?.toLowerCase()!==reviewerB.toLowerCase()||
+    !disclosure.relationship?.includes('I have never been employed, paid, contracted, or given equity by Project Cedar'))
+  throw Error('Reviewer B disclosure mismatch');
+ console.log('LATEST_FINAL_DISCLOSURE_B:',JSON.stringify({review_id:disclosure.review_id,reviewer:disclosure.reviewer,version:disclosure.version,assignment_version:disclosure.assignment_version,sha256:disclosure.sha256}));
  console.log('LATEST_FINAL_AUTHORIZATION_B:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,assignment_version:auth.assignment_version,disclosure_version:auth.disclosure_version}));
- if(auth.allowed!==false)throw Error('Reviewer B was authorized before completed eligibility assessment');
+ if(auth.verdict==='PENDING'&&auth.allowed!==false)
+  throw Error('Pending Reviewer B must not be authorized');
+ if(auth.allowed===true&&auth.verdict!=='ELIGIBLE')
+  throw Error('Reviewer B has authorization without ELIGIBLE verdict');
 }
 console.log('DISCLOSEGUARD_DEPLOYMENT_PREFLIGHT_PASS');

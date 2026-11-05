@@ -63,4 +63,14 @@ The disqualified Reviewer A attempted to submit a review from the *same assigned
 
 This negative execution is a **successful authorization-enforcement test**, not a successful review submission. The submitted input includes a synthetic review text and a SHA-256 field; the guard rejects based on reviewer eligibility before processing the review content. The earlier on-chain `authorization(1, ReviewerA)` read returned `allowed=false` / `verdict=RECUSE`. The later [read-only `LATEST_FINAL` check](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42044084120) additionally confirmed **no receipt for Reviewer A**, `submitted_receipts=0`, and the unchanged `RECUSE` / `allowed=false` authorization.
 
+## Reviewer B — independent reviewer assignment
+
+The Chair assigned a distinct second reviewer wallet to the same review case.
+
+| Method | Signer | Final status | GenVM | Consensus | Return value | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `assign_reviewer(1, 0xD6b8…C2aF)` | Chair `0x4C7c…8Dcb` | FINALIZED | SUCCESS | Accepted | Assignment version `1` | [0x509fa72d…421d78](https://explorer-studio.genlayer.com/tx/0x509fa72da672ac363525030c39a7fb2e6d5cac5b6cd8d8b97066765306421d78) |
+
+Reviewer B wallet: `0xD6b8A3A5eB329410D9504784812b8569afA8C2aF`. Assignment alone does not grant `submit_review` authorization; a signed self-disclosure and a current `ELIGIBLE` consensus assessment are required.
+
 Each next signed operation must have its own receipt and final-state readback.

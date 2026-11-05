@@ -135,4 +135,16 @@ After the Chair's `ELIGIBLE` consensus assessment, Reviewer B called `submit_rev
 
 At transaction time the assessment concerned **Rules v1, Assignment v1, Disclosure v2**. This successful transaction demonstrates authorized execution. The [successful read-only `LATEST_FINAL` verification](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42048408930) confirmed: `stats()={reviews:1,submitted_receipts:1}`; `receipt_for(1, ReviewerB)` and `get_receipt(1)` return the **same** on-chain receipt with `status=SIGNED_REVIEW_SUBMITTED`, `verdict=ELIGIBLE`, **Rules v1 / Assignment v1 / Disclosure v2**, matching text SHA-256, and `id=1`. After submission, `authorization(1,ReviewerB)` returns `allowed=false, receipt_id=1`. `receipt_for(1,ReviewerA)` remains empty. This shows persisted receipt and post-submission no-replay access state; a **second signed `submit_review` rollback** is an additional test not yet included in evidence.
 
+## Reviewer B — duplicate-review protection confirmed by signed rollback
+
+Reviewer B repeated the **same** `submit_review` call after successfully writing Receipt #1, using the same signed wallet, review text, and content SHA-256.
+
+| Method | Signer | Final status | GenVM result | Consensus | Failure reason | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `submit_review(1, same_review_text, same_sha256)` | Reviewer B `0xD6b8…C2aF` | FINALIZED | **ERROR / Rollback (expected)** | Accepted | `no current eligible reviewer authorization` | [0x5f17636e…f6c2a54](https://explorer-studio.genlayer.com/tx/0x5f17636eb1a59e38a3095bb2930a712694c6eb1c7a787bc4fb8567998f6c2a54) |
+
+Three validators agreed on the expected rollback; two validator executions were cancelled after quorum. This is an **expected negative acceptance test** and must not be presented as a successful second review submission. The transaction's rejection demonstrates enforcement of the post-receipt authorization gate.
+
+**Final-state condition to verify:** exactly one on-chain submitted receipt, Receipt #1 unchanged and readable by `receipt_for` / `get_receipt`; Reviewer B's `authorization.allowed=false` with `receipt_id=1`; Reviewer A has no receipt.
+
 Each next signed operation must have its own receipt and final-state readback.

@@ -1,6 +1,6 @@
 # DISCLOSEGUARD — Studio acceptance and reviewer guide
 
-**Network:** GenLayer Studionet 61999. **Contract class:** `DiscloseGuard` in `contracts/discloseguard.py`. Assign at least three wallets: Chair, Reviewer A and Reviewer B. Keep the actual contract address, signed tx hashes and final-state readbacks in your submission evidence.
+**Network:** GenLayer Studionet 61999. **Contract class:** `DiscloseGuard` in `contracts/discloseguard.py`. Assign at least three wallets: Chair, Reviewer A and Reviewer B. Record the actual contract address, signed tx hashes and final-state readbacks in the technical verification log.
 
 ## Create the review case
 

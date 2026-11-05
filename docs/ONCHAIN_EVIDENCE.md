@@ -111,4 +111,14 @@ After the first AI consensus returned `REVIEW_REQUIRED`, Reviewer B submitted a 
 - Supporting reference: `Synthetic test record B v2 / reviewer-signed self-disclosure / not independently verified`.
 - The original `REVIEW_REQUIRED` assessment is bound to **disclosure version 1**. After signing version 2, that assessment is stale and cannot grant access. A new Chair-signed `assess_conflict` is required. This step does not itself prove `ELIGIBLE`.
 
+## Reviewer B — consensus ELIGIBLE, disclosure v2
+
+After the second signed disclosure (v2), the Chair re-ran `assess_conflict(1, ReviewerB)`. GenVM succeeded and consensus accepted the `ELIGIBLE` label, including equivalence output `ELIGIBLE`, with 1 validator rotation.
+
+| Method | Signed by | Final status | GenVM | Consensus | AI verdict | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `assess_conflict(1, 0xD6b8…C2aF)` | Chair `0x4C7c…8Dcb` | FINALIZED | SUCCESS | Accepted | **`ELIGIBLE`** | [0x27118640…213b12](https://explorer-studio.genlayer.com/tx/0x271186407e4bf6d5ac29fda0762aadacd6435964fb398a03352c1d8324213b12) |
+
+This is a verdict on a synthetic **self-declaration**, not independent validation of real-world affiliations. It supersedes the v1 `REVIEW_REQUIRED` assessment for authorization under the same rules version. The actual current `authorization.allowed` and a signed review receipt must be separately confirmed from latest-final on-chain state.
+
 Each next signed operation must have its own receipt and final-state readback.

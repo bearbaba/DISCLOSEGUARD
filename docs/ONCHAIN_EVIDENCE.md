@@ -73,4 +73,18 @@ The Chair assigned a distinct second reviewer wallet to the same review case.
 
 Reviewer B wallet: `0xD6b8A3A5eB329410D9504784812b8569afA8C2aF`. Assignment alone does not grant `submit_review` authorization; a signed self-disclosure and a current `ELIGIBLE` consensus assessment are required.
 
+## Reviewer B — signed no-conflict disclosure
+
+Reviewer B signed a specific self-declaration of **no employment, compensation, contracting, equity or professional relationship** with Project Cedar or its founders/advisers. This declaration is a synthetic test fixture and is not external background verification.
+
+| Method | Signer | Final status | GenVM | Consensus | Return value | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `submit_disclosure(1, relationship, reference)` | Reviewer B `0xD6b8…C2aF` | FINALIZED | SUCCESS | Accepted | Disclosure version `1` | [0xd5d67df2…2691fa](https://explorer-studio.genlayer.com/tx/0xd5d67df2c2f87653a595cb614022383359d7353d8fb3f404967146b7e12691fa) |
+
+Disclosure statement: "I have never been employed, paid, contracted, or given equity by Project Cedar, its founders or current advisers, and have no professional relationship with the applicant."
+
+Supporting reference: `Self-declared conflict statement / test record B`.
+
+An AI verdict and submission authorization are separate future GenLayer decisions: the signed disclosure alone does not establish `ELIGIBLE`.
+
 Each next signed operation must have its own receipt and final-state readback.

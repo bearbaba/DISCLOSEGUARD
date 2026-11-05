@@ -46,7 +46,7 @@ Additional views: `get_review`, `get_assignment`, `get_disclosure`, `get_assessm
 
 DISCLOSEGUARD is deployed on **GenLayer Studionet 61999** at [`0x3cd3F9f47F0a8bF9BF9EFeC79613Fb9d20BD7981`](https://explorer-studio.genlayer.com/address/0x3cd3F9f47F0a8bF9BF9EFeC79613Fb9d20BD7981). The [read-only deployment preflight](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42039328637) verified the deployed source matches this repository, all 16 contract methods are present and `stats()` is readable at `LATEST_FINAL`. Initial state: `0 reviews / 0 receipts`. The [signed on-chain acceptance evidence](docs/ONCHAIN_EVIDENCE.md) now demonstrates all three actual GenLayer verdicts (**RECUSE, REVIEW_REQUIRED and ELIGIBLE**), RECUSE denial, disclosure-version reassessment, a successful one-time signed review with Receipt #1, and an expected duplicate-submission rollback. The latest [read-only state verification](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42048408930) verified the persisted receipt and post-submit authorization lock (prior to the duplicate transaction).
 
-**Scope of the proof:** these are Studionet executions using synthetic self-declarations, not independently verified real-world conflicts. A successful GenLayer consensus result does not constitute factual background verification or steward acceptance.
+**Scope of the proof:** these are Studionet executions using synthetic self-declarations, not independently verified real-world conflicts. A successful GenLayer consensus result is not factual background verification.
 
 [Import in GenLayer Studio](https://studio.genlayer.com/?import-contract=0x3cd3F9f47F0a8bF9BF9EFeC79613Fb9d20BD7981) · [Deployment reference](docs/DEPLOYMENT.md).
 

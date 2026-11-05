@@ -133,6 +133,6 @@ After the Chair's `ELIGIBLE` consensus assessment, Reviewer B called `submit_rev
 
 **Submitted review SHA-256:** `9f3ea69857f2e5ff38644486092de964a96e7678ac127bf4a6537f9e873e545a`.
 
-At transaction time the assessment concerned **Rules v1, Assignment v1, Disclosure v2**. This successful transaction demonstrates authorized execution. A separate read-only `LATEST_FINAL` check is used to verify `receipt_for`, `get_receipt`, and post-submission replay authorization, without claiming the second signed rejection test has happened.
+At transaction time the assessment concerned **Rules v1, Assignment v1, Disclosure v2**. This successful transaction demonstrates authorized execution. The [successful read-only `LATEST_FINAL` verification](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42048408930) confirmed: `stats()={reviews:1,submitted_receipts:1}`; `receipt_for(1, ReviewerB)` and `get_receipt(1)` return the **same** on-chain receipt with `status=SIGNED_REVIEW_SUBMITTED`, `verdict=ELIGIBLE`, **Rules v1 / Assignment v1 / Disclosure v2**, matching text SHA-256, and `id=1`. After submission, `authorization(1,ReviewerB)` returns `allowed=false, receipt_id=1`. `receipt_for(1,ReviewerA)` remains empty. This shows persisted receipt and post-submission no-replay access state; a **second signed `submit_review` rollback** is an additional test not yet included in evidence.
 
 Each next signed operation must have its own receipt and final-state readback.

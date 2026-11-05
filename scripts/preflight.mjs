@@ -73,6 +73,10 @@ if(state.reviews>=1) {
   throw Error('Expected finalized RECUSE assessment not found');
  console.log('LATEST_FINAL_ASSESSMENT_A:',JSON.stringify({review_id:assessment.review_id,reviewer:assessment.reviewer,verdict:assessment.verdict,assignment_version:assessment.assignment_version,disclosure_version:assessment.disclosure_version,rules_version:assessment.rules_version}));
  if(auth.allowed!==false||auth.verdict!=='RECUSE')throw Error('RECUSE must deny reviewer submission');
+ const receiptRaw=await client.readContract({address,functionName:'receipt_for',
+  args:[1,reviewer],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ if(receiptRaw!==''&&receiptRaw!==null)throw Error('Disqualified Reviewer A unexpectedly has receipt');
+ console.log('RECUSE_NO_RECEIPT_PASS');
  console.log('RECUSE_ACCESS_DENIED_PASS');
  console.log('LATEST_FINAL_AUTHORIZATION_A:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,disclosure_version:auth.disclosure_version}));
 }

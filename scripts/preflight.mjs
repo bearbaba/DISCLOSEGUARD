@@ -130,4 +130,31 @@ if(state.reviews>=1) {
  }
 
 }
+if(state.submitted_receipts>=1) {
+ const reviewerB='0xD6b8A3A5eB329410D9504784812b8569afA8C2aF';
+ const raw=await client.readContract({address,functionName:'receipt_for',args:[1,reviewerB],
+  transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ if(!raw)throw Error('Reviewer B signed receipt missing');
+ const receipt=typeof raw==='string'?JSON.parse(raw):raw;
+ const byIdRaw=await client.readContract({address,functionName:'get_receipt',args:[1],
+  transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const byId=typeof byIdRaw==='string'?JSON.parse(byIdRaw):byIdRaw;
+ const expectedHash='9f3ea69857f2e5ff38644486092de964a96e7678ac127bf4a6537f9e873e545a';
+ if(receipt.id!==1||receipt.review_id!==1||receipt.reviewer?.toLowerCase()!==reviewerB.toLowerCase()||
+   receipt.status!=='SIGNED_REVIEW_SUBMITTED'||receipt.verdict!=='ELIGIBLE'||
+   receipt.rules_version!==1||receipt.assignment_version!==1||receipt.disclosure_version!==2||
+   receipt.review_sha256!==expectedHash||hash(receipt.review_text)!==expectedHash)
+  throw Error('Reviewer B signed receipt mismatch');
+ if(JSON.stringify(byId)!==JSON.stringify(receipt))throw Error('Receipt lookup mismatch');
+ const authRaw=await client.readContract({address,functionName:'authorization',args:[1,reviewerB],
+  transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const auth=typeof authRaw==='string'?JSON.parse(authRaw):authRaw;
+ if(auth.receipt_id!==1||auth.allowed!==false||auth.verdict!=='ELIGIBLE')
+  throw Error('Reviewer B replay protection not active after receipt');
+ console.log('LATEST_FINAL_SIGNED_RECEIPT_B:',JSON.stringify({id:receipt.id,review_id:receipt.review_id,
+  reviewer:receipt.reviewer,status:receipt.status,verdict:receipt.verdict,review_sha256:receipt.review_sha256,
+  rules_version:receipt.rules_version,assignment_version:receipt.assignment_version,disclosure_version:receipt.disclosure_version}));
+ console.log('RECEIPT_BY_ID_MATCH_PASS');
+ console.log('REVIEWER_B_REPLAY_PROTECTION_STATE_PASS:',JSON.stringify({allowed:auth.allowed,receipt_id:auth.receipt_id}));
+}
 console.log('DISCLOSEGUARD_DEPLOYMENT_PREFLIGHT_PASS');

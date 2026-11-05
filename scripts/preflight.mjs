@@ -80,4 +80,19 @@ if(state.reviews>=1) {
  console.log('RECUSE_ACCESS_DENIED_PASS');
  console.log('LATEST_FINAL_AUTHORIZATION_A:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,disclosure_version:auth.disclosure_version}));
 }
+if(state.reviews>=1) {
+ const reviewerB='0xD6b8A3A5eB329410D9504784812b8569afA8C2aF';
+ const raw=await client.readContract({address,functionName:'get_assignment',
+  args:[1,reviewerB],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const assignment=typeof raw==='string'?JSON.parse(raw):raw;
+ if(assignment.review_id!==1||assignment.version!==1||assignment.active!==true||
+    assignment.reviewer?.toLowerCase()!==reviewerB.toLowerCase())
+  throw Error('Reviewer B assignment mismatch');
+ console.log('LATEST_FINAL_ASSIGNMENT_B:',JSON.stringify({review_id:assignment.review_id,reviewer:assignment.reviewer,version:assignment.version,active:assignment.active}));
+ const authRaw=await client.readContract({address,functionName:'authorization',
+  args:[1,reviewerB],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const auth=typeof authRaw==='string'?JSON.parse(authRaw):authRaw;
+ console.log('LATEST_FINAL_AUTHORIZATION_B:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,assignment_version:auth.assignment_version,disclosure_version:auth.disclosure_version}));
+ if(auth.allowed!==false)throw Error('Reviewer B was authorized before completed eligibility assessment');
+}
 console.log('DISCLOSEGUARD_DEPLOYMENT_PREFLIGHT_PASS');

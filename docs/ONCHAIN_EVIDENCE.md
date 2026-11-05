@@ -145,6 +145,6 @@ Reviewer B repeated the **same** `submit_review` call after successfully writing
 
 Three validators agreed on the expected rollback; two validator executions were cancelled after quorum. This is an **expected negative acceptance test** and must not be presented as a successful second review submission. The transaction's rejection demonstrates enforcement of the post-receipt authorization gate.
 
-**Final-state condition to verify:** exactly one on-chain submitted receipt, Receipt #1 unchanged and readable by `receipt_for` / `get_receipt`; Reviewer B's `authorization.allowed=false` with `receipt_id=1`; Reviewer A has no receipt.
+**Independently verified after the signed rollback:** The [read-only `LATEST_FINAL` acceptance check](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42049082920) returned `stats()={reviews:1,submitted_receipts:1}`, `NO_DUPLICATE_RECEIPT_COUNT_PASS: 1`, and confirmed **Receipt #1 was unchanged** (same reviewer, content SHA-256, `SIGNED_REVIEW_SUBMITTED`, Rules v1 / Assignment v1 / Disclosure v2). `receipt_for(1, ReviewerB)` matched `get_receipt(1)`, Reviewer B remained `allowed=false, receipt_id=1`, and Reviewer A still had no receipt. The deployed source continued to match the GitHub repository.
 
 Each next signed operation must have its own receipt and final-state readback.

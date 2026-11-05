@@ -61,6 +61,6 @@ The disqualified Reviewer A attempted to submit a review from the *same assigned
 | --- | --- | --- | --- | --- | --- | --- |
 | `submit_review(1, review_text, sha256)` | Reviewer A `0x60Bf…eBff` | FINALIZED | **ERROR / Rollback (expected)** | Accepted | `no current eligible reviewer authorization` | [0x426901b3…4b0c2e](https://explorer-studio.genlayer.com/tx/0x426901b353f511fc05f90f99db7f8e9d741955bc880e75b7c24965c2984b0c2e) |
 
-This negative execution is a **successful authorization-enforcement test**, not a successful review submission. The submitted input includes a synthetic review text and a SHA-256 field; the guard rejects based on reviewer eligibility before processing the review content. The earlier on-chain `authorization(1, ReviewerA)` read returned `allowed=false` / `verdict=RECUSE`.
+This negative execution is a **successful authorization-enforcement test**, not a successful review submission. The submitted input includes a synthetic review text and a SHA-256 field; the guard rejects based on reviewer eligibility before processing the review content. The earlier on-chain `authorization(1, ReviewerA)` read returned `allowed=false` / `verdict=RECUSE`. The later [read-only `LATEST_FINAL` check](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42044084120) additionally confirmed **no receipt for Reviewer A**, `submitted_receipts=0`, and the unchanged `RECUSE` / `allowed=false` authorization.
 
 Each next signed operation must have its own receipt and final-state readback.

@@ -120,5 +120,14 @@ if(state.reviews>=1) {
   throw Error('Pending Reviewer B must not be authorized');
  if(auth.allowed===true&&auth.verdict!=='ELIGIBLE')
   throw Error('Reviewer B has authorization without ELIGIBLE verdict');
+ if(disclosure.version===2 && assessment.disclosure_version===2 && assessment.rules_version===1) {
+  if(assessment.verdict!=='ELIGIBLE')throw Error('Reviewer B expected ELIGIBLE on signed disclosure v2');
+  if(auth.verdict!=='ELIGIBLE')throw Error('Reviewer B eligibility response mismatch');
+  if(state.submitted_receipts===0 && auth.allowed!==true)
+   throw Error('Eligible Reviewer B must be able to submit until receipt');
+  console.log('ELIGIBLE_V2_CONSENSUS_PASS');
+  if(state.submitted_receipts===0)console.log('ELIGIBLE_V2_AUTHORIZED_PASS');
+ }
+
 }
 console.log('DISCLOSEGUARD_DEPLOYMENT_PREFLIGHT_PASS');

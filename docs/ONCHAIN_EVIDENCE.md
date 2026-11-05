@@ -49,7 +49,7 @@ The Chair evaluated Reviewer A against the frozen Project Cedar conflict-of-inte
 
 The transaction's equivalence principle output also returned `RECUSE`. This consensus assessment concerns the submitted self-declaration and frozen rules; it does not independently prove the real-world relationship.
 
-A correctly implemented reviewer gate must keep `authorization(1, ReviewerA).allowed=false`. The on-chain `submit_review` denial test is a separate transaction from the AI assessment.
+**Independently verified at `LATEST_FINAL`:** `get_assessment(1, ReviewerA)` recorded `RECUSE` with rules, disclosure and assignment version `1`; `authorization(1, ReviewerA)` returned `allowed=false` and `verdict=RECUSE`. `stats()` remained `reviews=1`, `submitted_receipts=0`. The deployed source still matches the repository. See the [successful read-only GitHub Actions verification](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42043253417). The on-chain `submit_review` denial test is a separate transaction from the AI assessment.
 
 
 

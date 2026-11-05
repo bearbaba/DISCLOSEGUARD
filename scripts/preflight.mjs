@@ -64,6 +64,16 @@ if(state.reviews>=1) {
  const authorizationRaw=await client.readContract({address,functionName:'authorization',
   args:[1,reviewer],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
  const auth=typeof authorizationRaw==='string'?JSON.parse(authorizationRaw):authorizationRaw;
+ const assessmentRaw=await client.readContract({address,functionName:'get_assessment',
+  args:[1,reviewer],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const assessment=typeof assessmentRaw==='string'?JSON.parse(assessmentRaw):assessmentRaw;
+ if(assessment?.verdict!=='RECUSE'||assessment.review_id!==1||
+    assessment.reviewer?.toLowerCase()!==reviewer.toLowerCase()||
+    assessment.assignment_version!==1||assessment.disclosure_version!==1||assessment.rules_version!==1)
+  throw Error('Expected finalized RECUSE assessment not found');
+ console.log('LATEST_FINAL_ASSESSMENT_A:',JSON.stringify({review_id:assessment.review_id,reviewer:assessment.reviewer,verdict:assessment.verdict,assignment_version:assessment.assignment_version,disclosure_version:assessment.disclosure_version,rules_version:assessment.rules_version}));
+ if(auth.allowed!==false||auth.verdict!=='RECUSE')throw Error('RECUSE must deny reviewer submission');
+ console.log('RECUSE_ACCESS_DENIED_PASS');
  console.log('LATEST_FINAL_AUTHORIZATION_A:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,disclosure_version:auth.disclosure_version}));
 }
 console.log('DISCLOSEGUARD_DEPLOYMENT_PREFLIGHT_PASS');

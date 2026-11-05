@@ -99,4 +99,16 @@ The equivalence output was `REVIEW_REQUIRED` as well. Although the initial revie
 
 The contract keeps review submission **fail-closed** until a valid `ELIGIBLE` assessment is recorded for the current disclosure and rulebook. A revised disclosure, if submitted, increments the disclosure version and requires a new Chair assessment; the existing `REVIEW_REQUIRED` record is not automatically upgraded.
 
+## Reviewer B — versioned disclosure refinement
+
+After the first AI consensus returned `REVIEW_REQUIRED`, Reviewer B submitted a more specific **synthetic** statement addressing the no-conflict requirements, without changing the locked review rules.
+
+| Method | Signer | Final status | GenVM | Consensus | Return value | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `submit_disclosure(1, relationship_v2, reference_v2)` | Reviewer B `0xD6b8…C2aF` | FINALIZED | SUCCESS | Accepted | Disclosure version `2` | [0xb8cffe0f…12a6b](https://explorer-studio.genlayer.com/tx/0xb8cffe0f76e67d320a015394c439a61f7ed96f77ebe3e444f01be9b07da12a6b) |
+
+- The revised statement separately addresses direct ownership, founding, employment, compensation, contracting, paid advice, equity and professional ties to the applicant, its founders and current advisers during Grant Round Alpha.
+- Supporting reference: `Synthetic test record B v2 / reviewer-signed self-disclosure / not independently verified`.
+- The original `REVIEW_REQUIRED` assessment is bound to **disclosure version 1**. After signing version 2, that assessment is stale and cannot grant access. A new Chair-signed `assess_conflict` is required. This step does not itself prove `ELIGIBLE`.
+
 Each next signed operation must have its own receipt and final-state readback.

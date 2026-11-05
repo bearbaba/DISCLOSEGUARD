@@ -53,4 +53,14 @@ The transaction's equivalence principle output also returned `RECUSE`. This cons
 
 
 
+## Authorized access enforcement — RECUSAL ROLLBACK
+
+The disqualified Reviewer A attempted to submit a review from the *same assigned wallet* after the consensus assessment returned `RECUSE`. The contract rejected the operation before writing a receipt.
+
+| Method | Signer | Final status | GenVM | Consensus | Error | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `submit_review(1, review_text, sha256)` | Reviewer A `0x60Bf…eBff` | FINALIZED | **ERROR / Rollback (expected)** | Accepted | `no current eligible reviewer authorization` | [0x426901b3…4b0c2e](https://explorer-studio.genlayer.com/tx/0x426901b353f511fc05f90f99db7f8e9d741955bc880e75b7c24965c2984b0c2e) |
+
+This negative execution is a **successful authorization-enforcement test**, not a successful review submission. The submitted input includes a synthetic review text and a SHA-256 field; the guard rejects based on reviewer eligibility before processing the review content. The earlier on-chain `authorization(1, ReviewerA)` read returned `allowed=false` / `verdict=RECUSE`.
+
 Each next signed operation must have its own receipt and final-state readback.

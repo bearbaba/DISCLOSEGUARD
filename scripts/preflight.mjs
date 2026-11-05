@@ -108,8 +108,10 @@ if(state.reviews>=1) {
   throw Error('Reviewer B assessment missing or invalid');
  if(assessment.verdict==='REVIEW_REQUIRED'&&auth.allowed!==false)
   throw Error('REVIEW_REQUIRED cannot authorize reviewer');
- if(assessment.disclosure_version!==disclosure.version&&auth.allowed!==false)
-  throw Error('Stale disclosure assessment cannot authorize reviewer');
+ if(assessment.disclosure_version!==disclosure.version) {
+  if(auth.allowed!==false)throw Error('Stale disclosure assessment cannot authorize reviewer');
+  console.log('STALE_ASSESSMENT_DENIED:',JSON.stringify({current_disclosure_version:disclosure.version,old_assessment_version:assessment.disclosure_version,allowed:auth.allowed}));
+ }
  console.log('LATEST_FINAL_ASSESSMENT_B:',JSON.stringify({review_id:assessment.review_id,
    verdict:assessment.verdict,disclosure_version:assessment.disclosure_version,
    rules_version:assessment.rules_version,assignment_version:assessment.assignment_version}));

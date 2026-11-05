@@ -17,4 +17,14 @@ The chair signed a synthetic Project Cedar grant-review policy on November 5, 20
 - **Authority:** The chair wallet is the signer of `create_review`; no claim of independent real-world identity validation.
 - **Source and schema:** [Read-only Studionet deployment preflight](https://github.com/bearbaba/DISCLOSEGUARD/actions/runs/42039328637) previously verified deployed source matches the GitHub contract and all 16 methods are present.
 
-This is the **creation** of a review rulebook; it is not yet an AI consensus conflict-assessment or a successful signed-review submission. Each next signed operation must have its own receipt and final-state readback.
+## Signed reviewer assignment
+
+The Chair assigned reviewer wallet `0x60Bfdf6315294c7856Acdc0B80D7Bd40217DEBff` to Review #1 using `assign_reviewer(1, reviewer_wallet)`.
+
+| Method | Signed by | Final status | GenVM | Consensus | Return value | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `assign_reviewer(1, 0x60Bf…eBff)` | Chair `0x4C7c…8Dcb` | FINALIZED | SUCCESS | Accepted | Assignment version `1` | [0xe01ea7f9…d9ac32](https://explorer-studio.genlayer.com/tx/0xe01ea7f981cff80104652d5affe4e216c849954a335b2da95bfac00f0bd9ac32) |
+
+Assignment grants no immediate review-submission authorization: `submit_review` separately requires the assigned wallet's disclosure and a current GenLayer `ELIGIBLE` verdict. The reviewer has not yet submitted a conflict-of-interest disclosure in the recorded evidence.
+
+Each next signed operation must have its own receipt and final-state readback.

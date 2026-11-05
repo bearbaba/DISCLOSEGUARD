@@ -87,4 +87,16 @@ Supporting reference: `Self-declared conflict statement / test record B`.
 
 An AI verdict and submission authorization are separate future GenLayer decisions: the signed disclosure alone does not establish `ELIGIBLE`.
 
+## Reviewer B — conservative AI consensus (REVIEW_REQUIRED)
+
+The Chair assessed Reviewer B's **first** self-disclosure under the unchanged Review #1 rules.
+
+| Method | Signed by | Final status | GenVM | Consensus | AI verdict | Transaction |
+| --- | --- | --- | --- | --- | --- | --- |
+| `assess_conflict(1, 0xD6b8…C2aF)` | Chair `0x4C7c…8Dcb` | FINALIZED | SUCCESS | Accepted | **`REVIEW_REQUIRED`** | [0xd1abe32b…8d1475](https://explorer-studio.genlayer.com/tx/0xd1abe32b087cec76bcdabbedad61cc74acd5005dbce57bf1427818a4418d1475) |
+
+The equivalence output was `REVIEW_REQUIRED` as well. Although the initial reviewer statement denied ties to Project Cedar, validators did **not** classify it as `ELIGIBLE`. The exact cause of this model judgment is not proven by the single-label output; possible issues include insufficient specificity or the self-reported nature of the supporting reference. It would be inaccurate to claim a successful eligibility grant.
+
+The contract keeps review submission **fail-closed** until a valid `ELIGIBLE` assessment is recorded for the current disclosure and rulebook. A revised disclosure, if submitted, increments the disclosure version and requires a new Chair assessment; the existing `REVIEW_REQUIRED` record is not automatically upgraded.
+
 Each next signed operation must have its own receipt and final-state readback.

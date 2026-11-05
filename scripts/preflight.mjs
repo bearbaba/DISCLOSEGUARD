@@ -45,4 +45,25 @@ if(state.reviews>=1) {
  console.log('LATEST_FINAL_REVIEW_1:',JSON.stringify({id:review.id,chair:review.chair,
   rules_version:review.rules_version,active:review.active,title:review.title}));
 }
+if(state.reviews>=1) {
+ const reviewer='0x60Bfdf6315294c7856Acdc0B80D7Bd40217DEBff';
+ const assignmentRaw=await client.readContract({address,functionName:'get_assignment',
+  args:[1,reviewer],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const assignment=typeof assignmentRaw==='string'?JSON.parse(assignmentRaw):assignmentRaw;
+ if(assignment.review_id!==1||assignment.version!==1||assignment.active!==true||
+    assignment.reviewer?.toLowerCase()!==reviewer.toLowerCase())throw Error('Reviewer A assignment mismatch');
+ console.log('LATEST_FINAL_ASSIGNMENT_A:',JSON.stringify({review_id:assignment.review_id,reviewer:assignment.reviewer,version:assignment.version,active:assignment.active}));
+ const disclosureRaw=await client.readContract({address,functionName:'get_disclosure',
+  args:[1,reviewer],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const disclosure=typeof disclosureRaw==='string'?JSON.parse(disclosureRaw):disclosureRaw;
+ if(disclosure.review_id!==1||disclosure.version!==1||
+    disclosure.assignment_version!==1||disclosure.reviewer?.toLowerCase()!==reviewer.toLowerCase()||
+    !disclosure.relationship?.includes('paid adviser to Project Cedar'))
+  throw Error('Reviewer A signed disclosure mismatch');
+ console.log('LATEST_FINAL_DISCLOSURE_A:',JSON.stringify({review_id:disclosure.review_id,reviewer:disclosure.reviewer,version:disclosure.version,assignment_version:disclosure.assignment_version,sha256:disclosure.sha256}));
+ const authorizationRaw=await client.readContract({address,functionName:'authorization',
+  args:[1,reviewer],transactionHashVariant:TransactionHashVariant.LATEST_FINAL});
+ const auth=typeof authorizationRaw==='string'?JSON.parse(authorizationRaw):authorizationRaw;
+ console.log('LATEST_FINAL_AUTHORIZATION_A:',JSON.stringify({allowed:auth.allowed,verdict:auth.verdict,rules_version:auth.rules_version,disclosure_version:auth.disclosure_version}));
+}
 console.log('DISCLOSEGUARD_DEPLOYMENT_PREFLIGHT_PASS');
